@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { Route, RouterLink } from '@angular/router';
 @Component({
   selector: 'app-auth-user',
   standalone: true,

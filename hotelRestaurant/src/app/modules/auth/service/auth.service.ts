@@ -10,12 +10,11 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   constructor( private http: HttpClient, private apiConfig: ApiConfigService) { }
+//Arreglar este solo lo copie 
 
-  signUp(signUpModel: CustomerSignUpModel | EmployeeSignUpModel, type: 'customer' | 'employee'): Observable<any> {
-    return this.http.post<any>(`${this.apiConfig.API_AUTH}/sign-up/${type}`, signUpModel);
+ signUp(signUpModel: CustomerSignUpModel): Observable<any> {
+    return this.http.post<any>(`${this.apiConfig.API_AUTH}/sign-up`, signUpModel)
   }
-
-
   /*
   signin(signInModel: SignInModel): Observable<any> {
     return this.http.post<any>(`${this.apiConfig.API_AUTH}/sign-in`, signInModel)
