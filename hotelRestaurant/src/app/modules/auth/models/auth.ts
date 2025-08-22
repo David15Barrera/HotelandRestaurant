@@ -1,3 +1,20 @@
+// sign-up para cualquier tipo de usuario
+export interface SignUpModel {
+  fullName: string;
+  cui: string;
+  phone?: string;
+  email: string;
+  address: string;
+  password: string;
+  roleId: number;
+  // Opcionales de empleado
+  jobPosition?: string;
+  salary?: number;
+  hotelId?: string;
+  restaurantId?: string;
+}
+
+
 //Cliente
 export interface CustomerSignUpModel {
   fullName: string;
