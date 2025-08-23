@@ -1,19 +1,6 @@
-import { createAction, props } from '@ngrx/store';
-import { User } from './auth.models'
+import { createAction, props } from "@ngrx/store";
+import { SessionState } from "./session.state";
 
-export const loginRequested = createAction(
-  '[Auth] Login Requested',
-  props<{ email: string; password: string }>()
-);
 
-export const loginSucceeded = createAction(
-  '[Auth] Login Succeeded',
-  props<{ token: string; user: User }>()
-);
-
-export const loginFailed = createAction(
-  '[Auth] Login Failed',
-  props<{ error: string }>()
-);
-
-export const logout = createAction('[Auth] Logout');
+export const setSession = createAction('[General] Set Session', props<{ session: SessionState }>());
+export const signOut = createAction('[General] signOut')

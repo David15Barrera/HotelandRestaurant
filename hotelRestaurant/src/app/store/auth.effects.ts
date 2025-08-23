@@ -1,34 +1,33 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { loginRequested, loginSucceeded, loginFailed, logout } from './auth.actions';
-import { HttpClient } from '@angular/common/http';
-import { environments } from '../../environments/environment';
-import { catchError, map, of, switchMap } from 'rxjs';
+import { tap } from 'rxjs';
+import { Router } from '@angular/router';
+import { setSession, signOut } from './auth.actions';
 
 @Injectable()
 export class AuthEffects {
-  private actions$ = inject(Actions);
-  private http = inject(HttpClient);
+  actions$ = inject(Actions);
+  router = inject(Router);
 
-  login$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loginRequested),
-      switchMap(({ email, password }) =>
-        this.http.post<{ token: string; user: any }>(`${environments.API_URL}/auth/login`, { email, password }).pipe(
-          map(({ token, user }) => loginSucceeded({ token, user })),
-          catchError((err) => of(loginFailed({ error: err?.error?.message ?? 'Login error' })))
-        )
-      )
-    )
-  );
-
-  //Limpiar el Token al salir
-  logout$ = createEffect(
+  setSessionEffect = createEffect(
     () =>
       this.actions$.pipe(
-        ofType(logout),
-        map(() => {
-          localStorage.removeItem('auth');
+        ofType(setSession),
+        tap(({ session }) => {
+          localStorage.setItem('session', JSON.stringify(session));
+        })
+      ),
+    { dispatch: false }
+  );
+
+  signOutEffect = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(signOut),
+        tap(() => {
+          localStorage.removeItem('session');
+          localStorage.removeItem('current_user');
+          this.router.navigate(['session/login']);
         })
       ),
     { dispatch: false }

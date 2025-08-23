@@ -13,10 +13,7 @@ export class AuthService {
 //Arreglar este solo lo copie 
 
  // ----------- AUTH -----------
-  signUpCustomer(signUpModel: CustomerSignUpModel): Observable<any> {
-    return this.http.put<any>(`${this.apiConfig.API_AUTH}/sign-up`, signUpModel);
-  }
-
+ 
   signIn(signInModel: SignInModel): Observable<any> {
     return this.http.post<any>(`${this.apiConfig.API_AUTH}/sign-in`, signInModel);
   }
