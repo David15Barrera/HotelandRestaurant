@@ -42,7 +42,7 @@ formBuilder: FormBuilder = inject(FormBuilder)
       if (resp) {
         switch (resp.roleName) {
           case "ADMIN":
-            this.router.navigate(['user/inicio'])
+            this.router.navigate(['admin/inicio'])
             break
           case "CUSTOMER":
             this.router.navigate(['client/inicio'])
