@@ -18,9 +18,11 @@ export const routes: Routes = [
         }
      ]
         },
+        
         {path: "client",
          loadChildren: () => import('./modules/client/client.routes').then((m) => m.CLIENT_ROUTES),
-            },
+        },
+
         {path: "user",
         children: [
             {
@@ -30,16 +32,7 @@ export const routes: Routes = [
 
         },
         {path: "admin",
-            loadComponent: () =>
-            import("../app/modules/admin/components/layout-admin/layout-admin.component")
-                .then(m => m.LayoutAdminComponent),
-
-        children:[
-            {
-                path: "inicio", component: InicioAdminComponent
-            }
-        ]
-
+            loadChildren: () => import('./modules/admin/admin.routes').then( (m) => m.ADMIN_ROUTES),
         },
     {
         path: '',

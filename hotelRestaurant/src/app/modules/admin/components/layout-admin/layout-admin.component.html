@@ -1,25 +1,26 @@
-<!-- NAVBAR -->
 <nav class="bg-gray-800 text-white px-4 py-3 flex items-center justify-between">
-  <!-- Logo -->
-  <div class="text-lg font-bold">Admin Panel</div>
+  <div class="text-lg font-bold">Administrador</div>
 
-  <!-- Menú de navegación -->
+  <!-- Menu -->
   <div class="hidden md:flex space-x-6">
-    <a routerLink="/dashboard" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
+    <a routerLink="inicio" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
       Dashboard
     </a>
-    <a routerLink="/users" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
+    <a routerLink="hoteles" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
       Hoteles
     </a>
-    <a routerLink="/settings" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
+    <a routerLink="restaurantes" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
       Restaurantes
+    </a>
+    <a routerLink="empleados" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
+      Empleados
     </a>
     <a (click)="signOut()" routerLinkActive="text-yellow-400" class="hover:text-yellow-300">
      Cerrar Session
     </a>
   </div>
 
-  <!-- Botón móvil -->
+  <!-- Boton de Menu -->
   <button
     class="md:hidden focus:outline-none"
     (click)="toggleMenu()"
@@ -32,16 +33,16 @@
   </button>
 </nav>
 
-<!-- Menú móvil -->
+<!-- Menu para el movil -->
  @if (menuOpen) {
 <div class="bg-gray-700 text-white md:hidden px-4 py-2 space-y-2">
-  <a routerLink="/dashboard" routerLinkActive="text-yellow-400" class="block hover:text-yellow-300">
+  <a routerLink="inicio" routerLinkActive="text-yellow-400" class="block hover:text-yellow-300">
     Dashboard
   </a>
-  <a routerLink="/users" routerLinkActive="text-yellow-400" class="block hover:text-yellow-300">
+  <a routerLink="hoteles" routerLinkActive="text-yellow-400" class="block hover:text-yellow-300">
     Hoteles
   </a>
-  <a routerLink="/settings" routerLinkActive="text-yellow-400" class="block hover:text-yellow-300">
+  <a routerLink="restaurantes" routerLinkActive="text-yellow-400" class="block hover:text-yellow-300">
     Restaurantes
   </a>
 </div>

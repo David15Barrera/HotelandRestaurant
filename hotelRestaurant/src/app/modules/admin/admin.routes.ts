@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const ADMIN_ROUTES: Routes = [
   {
-    path: '',
+    path: '', // La ruta vacía es un buen reemplazo para '/' en rutas hijas
     loadComponent: () =>
       import('./components/layout-admin/layout-admin.component').then(
         (m) => m.LayoutAdminComponent
@@ -17,60 +17,39 @@ export const ADMIN_ROUTES: Routes = [
       },
       {
         path: 'hoteles',
-//        loadComponent: () =>
-//          import('./components/hoteles/crud-hotel/crud-hotel.component').then(
-//            (m) => m.CrudHotelComponent
- //         ),
-      },
-      {
-        path: 'habitaciones',
- //       loadComponent: () =>
- //         import('./components/hoteles/crud-habitaciones/crud-habitaciones.component').then(
- //           (m) => m.CrudHabitacionesComponent
- //         ),
-      },
-      {
-        path: 'restaurantes',
- //       loadComponent: () =>
- //        import('./components/restaurantes/crud-restaurante/crud-restaurante.component').then(
- //           (m) => m.CrudRestauranteComponent
- //         ),
-      },
-      {
- //       path: 'menu',
- //       loadComponent: () =>
- //         import('./components/restaurantes/crud-menu/crud-menu.component').then(
- //           (m) => m.CrudMenuComponent
- //         ),
+        loadComponent: () =>
+          import('./components/hotel-admin/hotelinicio/hotelinicio.component').then(
+            (m) => m.HotelinicioComponent
+          ),
       },
       {
         path: 'empleados',
-   //     loadComponent: () =>
-   //       import('./components/empleados/crud-empleados/crud-empleados.component').then(
-   //         (m) => m.CrudEmpleadosComponent
-   //       ),
+        loadComponent: () => import('./components/empleado/inicio-emp-admin/inicio-emp-admin.component').then(
+          (m) => m.InicioEmpAdminComponent),
       },
+      // Las rutas comentadas se han eliminado por completo para evitar errores
+      // {
+      //   path: 'habitaciones',
+      //   loadComponent: () =>
+      //     import('./components/hoteles/crud-habitaciones/crud-habitaciones.component').then(
+      //       (m) => m.CrudHabitacionesComponent
+      //     ),
+      // },
       {
-        path: 'reportes',
-  //      loadComponent: () =>
-  //        import('./components/reportes/reportes.component').then(
-  //          (m) => m.ReportesComponent
-  //        ),
+        path: 'restaurantes',
+        loadComponent: () =>
+         import('./components/restaurant-admin/restauinicio/restauinicio.component').then(
+            (m) => m.RestauinicioComponent
+          ),
       },
-      {
-  //      path: 'promociones',
-  //      loadComponent: () =>
-  ///        import('./components/promociones/promociones.component').then(
-  //          (m) => m.PromocionesComponent
-  //        ),
-      },
-      {
-  //      path: 'finanzas',
-  //      loadComponent: () =>
-  //        import('./components/finanzas/pagos-empleados/pagos-empleados.component').then(
-  //          (m) => m.PagosEmpleadosComponent
-  //        ),
-      },
+      // {
+      //   path: 'menu',
+      //   loadComponent: () =>
+      //     import('./components/restaurantes/crud-menu/crud-menu.component').then(
+      //       (m) => m.CrudMenuComponent
+      //     ),
+      // },
+      // ... y así sucesivamente para todas las rutas que no se usarán por ahora.
     ],
   },
 ];
