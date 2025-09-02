@@ -42,6 +42,12 @@ export const CLIENT_ROUTES: Routes = [
              loadComponent: () => import('./restaurant/menu-restaurante/menu-restaurante.component').then(
                 (m) => m.MenuRestauranteComponent
              )
+            },
+            {
+               path: 'perfil-cliente',
+               loadComponent: () => import('./perfil-cliente/perfil-cliente.component').then(
+                  (m) => m.PerfilClienteComponent,
+               )
             }
         ]
     }

@@ -32,6 +32,12 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => import('./components/cliente/inicio-cli-admin/inicio-cli-admin.component').then(
           (m) => m.InicioCliAdminComponent),
       },
+      {
+        path: 'perfil-cliente',
+        loadComponent: () => import('./components/cliente/perfil-cli/perfil-cli.component').then(
+          (m) => m.PerfilCliComponent,
+        )
+      },
       // Las rutas comentadas se han eliminado por completo para evitar errores
       // {
       //   path: 'habitaciones',

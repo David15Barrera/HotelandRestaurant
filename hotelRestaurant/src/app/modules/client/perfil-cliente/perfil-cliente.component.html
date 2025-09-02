@@ -1,0 +1,92 @@
+<div class="max-w-3xl mx-auto p-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">Perfil de Cliente</h2>
+
+  <!-- Loading -->
+   @if (loading) {
+
+  <div class="text-gray-500">Cargando perfil...</div>
+}
+
+
+  <!-- Perfil -->
+   @if (!loading && customer) {
+  <div class="bg-white shadow-lg rounded-xl p-6">
+    <!-- Vista normal -->
+     @if (!editing) {
+
+   <div>
+      <p><span class="font-semibold">Nombre:</span> {{ customer.fullName }}</p>
+      <p><span class="font-semibold">CUI:</span> {{ customer.cui }}</p>
+      <p><span class="font-semibold">Teléfono:</span> {{ customer.phone }}</p>
+      <p><span class="font-semibold">Email:</span> {{ customer.email }}</p>
+      <p><span class="font-semibold">Dirección:</span> {{ customer.address }}</p>
+      <p><span class="font-semibold">Puntos:</span> {{ customer.loyaltyPoints }}</p>
+
+
+      <button
+        (click)="toggleEdit()"
+        class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+        Editar perfil
+      </button>
+    </div>
+
+     }
+
+    <!-- Formulario de edición -->
+     @if (editing) {
+    <form (ngSubmit)="saveChanges()" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium">Nombre completo</label>
+        <input [(ngModel)]="customer.fullName" name="fullName"
+          class="w-full p-2 border rounded-lg" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">CUI</label>
+        <input [(ngModel)]="customer.cui" name="cui"
+          class="w-full p-2 border rounded-lg" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Teléfono</label>
+        <input [(ngModel)]="customer.phone" name="phone"
+          class="w-full p-2 border rounded-lg" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Email</label>
+        <input [(ngModel)]="customer.email" name="email" type="email"
+          class="w-full p-2 border rounded-lg" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium">Dirección</label>
+        <input [(ngModel)]="customer.address" name="address"
+          class="w-full p-2 border rounded-lg" />
+      </div>
+      <div>
+        <p><span class="w-full p-2 border rounded-lg">Puntos:</span> {{ customer.loyaltyPoints }}</p>
+      </div>
+
+      <div class="flex gap-3 mt-4">
+        <button
+          type="submit"
+          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+          Guardar
+        </button>
+        <button
+          type="button"
+          (click)="toggleEdit()"
+          class="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+          Cancelar
+        </button>
+      </div>
+    </form>
+
+     }
+  </div>
+   }
+
+  <!-- Si no hay perfil -->
+   @if (!loading && !customer) {
+  <div class="text-red-500">
+    No se encontró información del cliente.
+  </div>
+   }
+</div>
