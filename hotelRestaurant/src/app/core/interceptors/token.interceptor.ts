@@ -8,14 +8,16 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const store = inject(Store);
 
   return store.select(selectToken).pipe(
-    take(1),
+    take(1), // tomar solo el valor actual del token
     switchMap(token => {
       if (!token) {
         return next(req);
       }
+
       const authReq = req.clone({
         setHeaders: { Authorization: `Bearer ${token}` }
       });
+
       return next(authReq);
     })
   );

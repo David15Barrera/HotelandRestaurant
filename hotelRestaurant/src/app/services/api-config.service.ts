@@ -10,5 +10,6 @@ export class ApiConfigService {
   // AUTH
   API_AUTH = `${this.API_BASE}/v1/auth`;
   API_EMPLOYEE = `${this.API_BASE}/v1/employee`;
+  API_CUSTOMER = `${this.API_BASE}/api/v1/customers`;
 
 }
