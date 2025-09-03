@@ -20,6 +20,12 @@ export const CLIENT_ROUTES: Routes = [
              ),
             },
             {
+               path:'hoteles-detail/:id',
+               loadComponent: () => import('./hotel/detail-hoteles/detail-hoteles.component').then(
+                  (m) => m.DetailHotelesComponent,
+               )
+            },
+            {
              path:'habitaciones',
              loadComponent: () => import('./hotel/list-habitaciones/list-habitaciones.component').then(
                 (m) => m.ListHabitacionesComponent
