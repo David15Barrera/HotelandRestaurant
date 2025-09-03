@@ -8,7 +8,7 @@ import { ApiConfigService } from '../../../services/api-config.service';
 })
 export class HotelService {
 
-    private http = inject(HttpClient);
+  private http = inject(HttpClient);
   private apiConfig = inject(ApiConfigService);
   private API = this.apiConfig.API_HOTEL;
 

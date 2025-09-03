@@ -37,15 +37,12 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => import('./components/cliente/perfil-cli/perfil-cli.component').then(
           (m) => m.PerfilCliComponent,
         )
+      },{
+       path: 'cuartos',
+       loadComponent: () => import('./components/hotel-admin/habitaciones/habitaciones.component').then(
+        (m) => m.HabitacionesComponent,
+       ) 
       },
-      // Las rutas comentadas se han eliminado por completo para evitar errores
-      // {
-      //   path: 'habitaciones',
-      //   loadComponent: () =>
-      //     import('./components/hoteles/crud-habitaciones/crud-habitaciones.component').then(
-      //       (m) => m.CrudHabitacionesComponent
-      //     ),
-      // },
       {
         path: 'restaurantes',
         loadComponent: () =>
