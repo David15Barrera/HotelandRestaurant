@@ -54,6 +54,12 @@ export const CLIENT_ROUTES: Routes = [
                loadComponent: () => import('./perfil-cliente/perfil-cliente.component').then(
                   (m) => m.PerfilClienteComponent,
                )
+            },
+            {
+               path: 'reservaciones',
+               loadComponent: () => import('./hotel/ver-reservacion-cli/ver-reservacion-cli.component').then(
+                  (m) => m.VerReservacionCliComponent,
+               )
             }
         ]
     }

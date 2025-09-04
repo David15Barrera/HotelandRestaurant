@@ -78,45 +78,56 @@ reservar(room: Room): void {
     return;
   }
 
-  if (new Date(fechas.endDate) <= new Date(fechas.startDate)) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // ignorar hora
+  const start = new Date(fechas.startDate);
+  const end = new Date(fechas.endDate);
+
+  if (start < today) {
+    alert('La fecha de inicio no puede ser anterior a hoy.');
+    return;
+  }
+
+  if (end <= start) {
     alert('La fecha de fin debe ser mayor a la fecha de inicio.');
     return;
   }
 
-  const reservation: Reservation = {
-    customerId: 'de851a7f-1232-4fb4-b549-0dcd7aa8bcd0',
-    roomId: room.id!,
-    startDate: fechas.startDate,
-    endDate: fechas.endDate,
-    state: 'ocupada',
-    pricePerDay: room.pricePerDay,
-    maintenanceCostPerDay: room.maintenanceCostPerDay,
-    discountPercentage: 0,
-    promotionId: 'd3c45f12-7890-4567-bcde-89012f34abcd'
-  };
+  // Verificamos disponibilidad en esas fechas
+  this.roomService.getRoomAvailability(room.id!, fechas.startDate, fechas.endDate).subscribe({
+    next: (available) => {
+      if (!available) {
+        alert(`La habitación ${room.roomNumber} no está disponible entre ${fechas.startDate} y ${fechas.endDate}`);
+        return;
+      }
 
-  this.reservationService.createReservation(reservation).subscribe({
-    next: () => {
-  //Actualizacion de la habitacion a ocupada
-      const updatedRoom: Room = {
-        ...room,
-        state: 'ocupada'
+      // Si está disponible, se crea la reserva
+      const reservation: Reservation = {
+        customerId: 'de851a7f-1232-4fb4-b549-0dcd7aa8bcd0',
+        roomId: room.id!,
+        startDate: fechas.startDate,
+        endDate: fechas.endDate,
+        state: 'ocupada',
+        pricePerDay: room.pricePerDay,
+        maintenanceCostPerDay: room.maintenanceCostPerDay,
+        discountPercentage: 0,
+        promotionId: 'd3c45f12-7890-4567-bcde-89012f34abcd'
       };
 
-      this.roomService.updateRoom(room.id!, updatedRoom).subscribe({
+      this.reservationService.createReservation(reservation).subscribe({
         next: () => {
           alert(`Habitación ${room.roomNumber} reservada con éxito del ${fechas.startDate} al ${fechas.endDate}`);
-          this.loadRooms(); // para refrescar habitaciones
+          this.loadRooms();
         },
         error: (err) => {
-          console.error('Error al actualizar estado de habitación:', err);
-          alert('La reserva se creó, pero no se pudo actualizar el estado de la habitación.');
+          console.error('Error al reservar habitación:', err);
+          alert('No se pudo realizar la reserva');
         }
       });
     },
     error: (err) => {
-      console.error('Error al reservar habitación:', err);
-      alert('No se pudo realizar la reserva');
+      console.error('Error al verificar disponibilidad:', err);
+      alert('No se pudo verificar la disponibilidad de la habitación.');
     }
   });
 }

@@ -1,0 +1,25 @@
+<div class="p-8 bg-gray-50 min-h-screen flex flex-col items-center space-y-8">
+  <h1 class="text-3xl font-bold text-gray-900">Mis Reservaciones</h1>
+
+  @if (loading) {
+    <p class="text-gray-500 text-lg">Cargando reservaciones...</p>
+  } @else if (reservations.length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
+      @for (res of reservations; track res.id) {
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+          <h2 class="text-xl font-semibold mb-2">Reserva #{{ res.id }}</h2>
+          <p class="text-gray-600">Hotel: {{ res.hotelName }}</p>
+          <p class="text-gray-600">Habitación: {{ res.roomName }}</p>
+          <p class="text-gray-600">Estado: {{ res.state }}</p>
+          <p class="text-gray-600">Inicio: {{ res.startDate }}</p>
+          <p class="text-gray-600">Fin: {{ res.endDate }}</p>
+          <p class="text-gray-800 font-bold mt-3">
+            Total a pagar: Q{{ res.totalPrice }}
+          </p>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="text-gray-500">No tienes reservaciones registradas.</p>
+  }
+</div>
