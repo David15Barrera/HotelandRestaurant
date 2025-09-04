@@ -37,11 +37,18 @@ export const ADMIN_ROUTES: Routes = [
         loadComponent: () => import('./components/cliente/perfil-cli/perfil-cli.component').then(
           (m) => m.PerfilCliComponent,
         )
-      },{
+      },
+      {
        path: 'cuartos',
        loadComponent: () => import('./components/hotel-admin/habitaciones/habitaciones.component').then(
         (m) => m.HabitacionesComponent,
        ) 
+      },
+      {
+        path: 'reservations',
+        loadComponent: () => import('./components/hotel-admin/reservas-admin/reservas-admin.component').then(
+          (m) => m.ReservasAdminComponent,
+        )
       },
       {
         path: 'restaurantes',
