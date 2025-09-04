@@ -1,42 +1,94 @@
-<div class="p-8 bg-gray-50 min-h-screen flex items-center justify-center">
+<div class="p-8 bg-gray-50 min-h-screen flex flex-col items-center space-y-8">
 
+  <!-- Card del Hotel -->
   @if (!loading && hotel) {
-    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8 transform transition-transform duration-300 hover:scale-[1.01]">
-      
+    <div
+      class="bg-white rounded-2xl shadow-2xl p-8 max-w-4xl w-full flex flex-col md:flex-row items-start space-y-6 md:space-y-0 md:space-x-8 transform transition-transform duration-300 hover:scale-[1.01]">
       <div class="w-full md:w-1/2">
-        <img src="https://www.kayak.com.mx/rimg/dimg/dynamic/29/2023/08/9ad7e8322abdb473d30bd9a932f9caeb.webp" 
-             alt="{{ hotel.name }}" 
-             class="w-full h-80 object-cover rounded-xl shadow-lg">
+        <img src="https://www.kayak.com.mx/rimg/dimg/dynamic/29/2023/08/9ad7e8322abdb473d30bd9a932f9caeb.webp" alt="{{ hotel.name }}"
+          class="w-full h-80 object-cover rounded-xl shadow-lg">
       </div>
-      
+
       <div class="w-full md:w-1/2 flex flex-col justify-between">
         <div class="space-y-4">
-          <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">{{ hotel.name }}</h1>
-          
+          <h1 class="text-4xl font-extrabold text-gray-900 leading-tight">
+            {{ hotel.name }}</h1>
+
           <div class="space-y-3">
             <p class="text-gray-600 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z"/>
-              </svg>
-              {{ hotel.address }}
+              Dirección: {{ hotel.address }}
             </p>
-            
             <p class="text-gray-600 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24.9.36 1.86.55 2.85.55.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 .99.19 1.95.55 2.85.12.35.03.75-.24 1.02l-2.2 2.2z"/>
-              </svg>
-              Teléfono: {{ hotel.phone }}
+              Celular/Telefono: {{ hotel.phone }}
             </p>
-            
             <p class="text-gray-600 flex items-center">
-              <svg class="w-5 h-5 mr-2 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-              </svg>
-              Habitaciones Disponibles: {{ hotel.totalRooms }}
+              Habitaciones Totales: {{ hotel.totalRooms }}
             </p>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Lista de habitaciones -->
+    <div class="max-w-4xl w-full">
+      <h2 class="text-2xl font-bold text-gray-800 mb-4">Habitaciones de {{ hotel.name }}</h2>
+      
+      @if (rooms.length > 0) {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          @for (room of rooms; track room.id) {
+<div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+  <h3 class="text-xl font-bold text-gray-800 mb-2">Habitación {{ room.roomNumber }}</h3>
+  <p class="text-gray-600 mb-1">Capacidad: {{ room.capacity }}</p>
+  <p class="text-gray-600 mb-1">Precio por día: Q{{ room.pricePerDay }}</p>
+  <p class="text-gray-600 mb-1">Costo mantenimiento: Q{{ room.maintenanceCostPerDay }}</p>
+  <p class="text-gray-600 mb-2">Estado: 
+    <span [ngClass]="{
+      'bg-green-500 text-white': room.state === 'disponible',
+      'bg-yellow-500 text-white': room.state === 'ocupado',
+      'bg-red-500 text-white': room.state === 'mantenimiento'
+    }" class="px-2 py-1 rounded-full text-xs font-bold uppercase">{{ room.state }}</span>
+  </p>
+  <p class="text-sm text-gray-500 mt-2">{{ room.description }}</p>
+
+  <div class="mt-4 flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+    <div class="flex-1">
+      <label for="startDate-{{room.id}}" class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
+      <input
+        id="startDate-{{room.id}}"
+        type="date"
+        [(ngModel)]="selectedDates[room.id!].startDate"
+        class="mt-1 px-3 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+
+    <div class="flex-1">
+      <label for="endDate-{{room.id}}" class="block text-sm font-medium text-gray-700">Fecha de fin</label>
+      <input
+        id="endDate-{{room.id}}"
+        type="date"
+        [(ngModel)]="selectedDates[room.id!].endDate"
+        class="mt-1 px-3 py-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      />
+    </div>
+  </div>
+
+  <button 
+    (click)="reservar(room)" 
+    [disabled]="room.state !== 'disponible'"
+    class="mt-6 px-6 py-3 rounded-xl shadow-md text-white font-semibold transition duration-200 w-full"
+    [ngClass]="{
+      'bg-green-600 hover:bg-green-700 cursor-pointer': room.state === 'disponible',
+      'bg-gray-400 cursor-not-allowed': room.state !== 'disponible'
+    }"
+  >
+    Reservar
+  </button>
+</div>
+          }
+        </div>
+      } @else {
+        <p class="text-gray-500">Este hotel aún no tiene habitaciones registradas.</p>
+      }
     </div>
   } @else if (loading) {
     <div class="text-gray-500 p-6 text-xl">Cargando detalles del hotel...</div>

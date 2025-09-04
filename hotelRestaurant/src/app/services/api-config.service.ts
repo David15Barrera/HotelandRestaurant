@@ -16,4 +16,5 @@ export class ApiConfigService {
   //Hotel:
   API_HOTEL = `${this.API_HOTELBASE}/api/v1/hotels`;
   API_ROOMS = `${this.API_HOTELBASE}/api/v1/rooms`;
+  API_RESERVAS = `${this.API_HOTELBASE}/api/v1/reservations`;
 }
