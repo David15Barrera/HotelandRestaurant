@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InicioUserComponent } from './inicio-user.component';
+import { PedidoDetailComponent } from './pedido-detail.component';
 
-describe('InicioUserComponent', () => {
-  let component: InicioUserComponent;
-  let fixture: ComponentFixture<InicioUserComponent>;
+describe('PedidoDetailComponent', () => {
+  let component: PedidoDetailComponent;
+  let fixture: ComponentFixture<PedidoDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [InicioUserComponent]
+      imports: [PedidoDetailComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(InicioUserComponent);
+    fixture = TestBed.createComponent(PedidoDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

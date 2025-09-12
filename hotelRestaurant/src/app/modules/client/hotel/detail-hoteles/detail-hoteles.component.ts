@@ -8,6 +8,9 @@ import { ReservationService } from '../../services/reservation.service';
 import { Reservation } from '../../models/reservation.interface';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Promotion } from '../../models/promotiones.model';
+import { PromotionService } from '../../services/promotiones.service';
+
 @Component({
   selector: 'app-detail-hoteles',
   standalone: true,
@@ -19,15 +22,19 @@ export class DetailHotelesComponent implements OnInit {
   hotel?: Hotel;
   rooms: Room[] = [];
   loading = true;
+  promotions: Promotion[] = [];
+  
+  promotionsHotel: Promotion[] = [];
+  promotionsRooms: Promotion[] = [];
 
-   // Almacenar fechas seleccionadas por habitación
   selectedDates: { [roomId: string]: { startDate: string; endDate: string } } = {};
 
   constructor(
     private route: ActivatedRoute,
     private hotelService: HotelService,
     private roomService: RoomService,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private promotionService: PromotionService
   ) {}
 
  ngOnInit(): void {
@@ -37,6 +44,7 @@ export class DetailHotelesComponent implements OnInit {
         next: (data) => {
           this.hotel = data;
           this.loadRooms();
+          this.loadPromotions(); 
           this.loading = false;
         },
         error: (err) => {
@@ -70,6 +78,25 @@ export class DetailHotelesComponent implements OnInit {
     });
   }
 
+loadPromotions(): void {
+  if (this.hotel?.id) {
+    this.promotionService.getByHotel(this.hotel.id).subscribe({
+      next: (data) => {
+        // Generales del hotel
+        this.promotionsHotel = data.filter(promo =>
+          promo.hotelId && !promo.roomId && !promo.customerId && !promo.restaurantId
+        );
+
+        // Promos ligadas a cuartos
+        this.promotionsRooms = data.filter(promo =>
+          promo.roomId !== null && promo.roomId !== undefined
+        );
+      },
+      error: (err) => console.error('Error al obtener promociones del hotel:', err)
+    });
+  }
+}
+
 reservar(room: Room): void {
   const fechas = this.selectedDates[room.id!];
 
@@ -79,7 +106,7 @@ reservar(room: Room): void {
   }
 
   const today = new Date();
-  today.setHours(0, 0, 0, 0); // ignorar hora
+  today.setHours(0, 0, 0, 0); 
   const start = new Date(fechas.startDate);
   const end = new Date(fechas.endDate);
 
@@ -93,7 +120,7 @@ reservar(room: Room): void {
     return;
   }
 
-  // Verificamos disponibilidad en esas fechas
+  // Verificamos disponibilidad
   this.roomService.getRoomAvailability(room.id!, fechas.startDate, fechas.endDate).subscribe({
     next: (available) => {
       if (!available) {
@@ -101,7 +128,34 @@ reservar(room: Room): void {
         return;
       }
 
-      // Si está disponible, se crea la reserva
+      // 🔎 1. Buscar promociones generales válidas del hotel
+      let applicablePromotion: Promotion | undefined;
+
+      applicablePromotion = this.promotionsHotel.find((promo) => {
+        const promoStart = new Date(promo.startDate);
+        const promoEnd = new Date(promo.endDate);
+        return start >= promoStart && end <= promoEnd;
+      });
+
+      // 🔎 2. Si no hay promoción general, revisar promociones de la habitación
+      if (!applicablePromotion) {
+        applicablePromotion = this.promotionsRooms.find((promo) => {
+          const promoStart = new Date(promo.startDate);
+          const promoEnd = new Date(promo.endDate);
+          return promo.roomId === room.id && start >= promoStart && end <= promoEnd;
+        });
+      }
+
+      // Aplicar descuento
+      const discount = applicablePromotion ? applicablePromotion.discountPercentage : 0;
+      const promoId = applicablePromotion ? applicablePromotion.id : undefined;
+
+      // Calcular días
+      const days = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+
+      // Calcular total
+      const totalPrice = (room.pricePerDay * days) * (1 - discount / 100);
+
       const reservation: Reservation = {
         customerId: 'de851a7f-1232-4fb4-b549-0dcd7aa8bcd0',
         roomId: room.id!,
@@ -110,13 +164,19 @@ reservar(room: Room): void {
         state: 'ocupada',
         pricePerDay: room.pricePerDay,
         maintenanceCostPerDay: room.maintenanceCostPerDay,
-        discountPercentage: 0,
-        promotionId: 'd3c45f12-7890-4567-bcde-89012f34abcd'
+        discountPercentage: discount,
+        promotionId: promoId,
+        totalPrice: totalPrice
       };
 
       this.reservationService.createReservation(reservation).subscribe({
         next: () => {
-          alert(`Habitación ${room.roomNumber} reservada con éxito del ${fechas.startDate} al ${fechas.endDate}`);
+          alert(
+            `Habitación ${room.roomNumber} reservada con éxito del ${fechas.startDate} al ${fechas.endDate}\n` +
+            (applicablePromotion 
+              ? `Se aplicó la promoción "${applicablePromotion.name}" con ${discount}% de descuento.`
+              : 'No se aplicó ninguna promoción.')
+          );
           this.loadRooms();
         },
         error: (err) => {
@@ -130,5 +190,9 @@ reservar(room: Room): void {
       alert('No se pudo verificar la disponibilidad de la habitación.');
     }
   });
+}
+
+getPromotionForRoom(roomId: string): Promotion | undefined {
+  return this.promotionsRooms.find((promo) => promo.roomId === roomId);
 }
 }

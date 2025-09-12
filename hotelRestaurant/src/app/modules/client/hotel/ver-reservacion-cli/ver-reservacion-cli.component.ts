@@ -6,6 +6,7 @@ import { Hotel } from '../../models/hotel.interface';
 import { RoomService } from '../../../admin/services/room.service';
 import { HotelService } from '../../services/hotel.service';
 import { forkJoin, map, switchMap } from 'rxjs';
+import { PromotionService } from '../../services/promotiones.service';
 
 @Component({
   selector: 'app-ver-reservacion-cli',
@@ -21,11 +22,12 @@ export class VerReservacionCliComponent implements OnInit {
   constructor(
     private reservationService: ReservationService,
     private roomService: RoomService,
-    private hotelService: HotelService
+    private hotelService: HotelService,
+    private promotionService: PromotionService 
   ) {}
 
   ngOnInit(): void {
-    const customerId = 'de851a7f-1232-4fb4-b549-0dcd7aa8bcd0'; // TODO: obtener del login
+    const customerId = '8bbb48e3-68b6-4b2f-9b09-35ee1706980c'; // TODO: obtener del login
     this.reservationService.getReservationsByCustomer(customerId).subscribe({
       next: (data) => {
         const enrichedReservations$ = data.map(res =>
@@ -62,13 +64,15 @@ export class VerReservacionCliComponent implements OnInit {
     });
   }
 
-  calcularTotal(reservation: Reservation): number {
-    const start = new Date(reservation.startDate);
-    const end = new Date(reservation.endDate);
+ calcularTotal(reservation: Reservation): number {
+  const start = new Date(reservation.startDate);
+  const end = new Date(reservation.endDate);
 
-    const diffTime = Math.abs(end.getTime() - start.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    return diffDays * reservation.pricePerDay;
-  }
+  const subtotal = diffDays * reservation.pricePerDay;
+  return subtotal * (1 - (reservation.discountPercentage || 0) / 100);
+}
+
 }

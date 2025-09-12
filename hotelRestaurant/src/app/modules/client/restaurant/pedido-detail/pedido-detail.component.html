@@ -1,0 +1,84 @@
+@if (order) {
+  <div class="p-8 bg-gray-100 min-h-screen font-sans text-gray-800">
+
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200">
+      <h2 class="text-3xl font-extrabold text-blue-700 mb-2">Detalle del Pedido</h2>
+      <!-- <p><strong>Cliente:</strong> {{ order.customer.fullName }}</p> -->
+      <p class="text-gray-500 mb-4">Información general del pedido</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <p><strong>ID Pedido:</strong> {{ order.id }}</p>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h2v-2h-2v2zm0-4h2v-4h-2v4z"/></svg>
+          <p><strong>Total:</strong> Q{{ order.totalPrice }}</p>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-purple-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+          <p><strong>Estado:</strong> {{ order.status }}</p>
+        </div>
+        
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <p><strong>Fecha:</strong> {{ order.createdAt | date:'short' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-2">
+  <svg class="w-6 h-6 text-pink-500" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M12 2a10 10 0 100 20 10 10 0 000-20zM11 15h2v2h-2v-2zm0-8h2v6h-2V7z"/>
+  </svg>
+    <p>
+      <strong>Promoción:</strong> 
+      @if (order.promotion) {
+        {{ order.promotion.name }} ({{ order.promotion.discountPercentage }}% desc.)
+      } @else {
+        <span class="text-gray-500">Sin promoción</span>
+      }
+    </p>
+  </div>
+
+
+    @if (details && details.length > 0) {
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+        <h3 class="text-2xl font-bold text-gray-900 mb-4">Platos en el Pedido</h3>
+        <ul class="divide-y divide-gray-200">
+          @for (d of details; track d.dishId) {
+            <li class="py-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2">
+                <div class="font-semibold text-gray-900 text-lg"> {{d.dishId }} </div>
+                <div class="md:text-right">
+                  <p class="text-gray-600"><strong>Cantidad:</strong> {{ d.quantity }}</p>
+                  <p class="text-gray-600"><strong>Precio Unitario:</strong> Q{{ d.unitCost | currency:'GTQ':'symbol':'1.2-2' }}</p>
+                  <p class="text-gray-600 font-bold"><strong>Subtotal:</strong> Q{{ d.subtotal | currency:'GTQ':'symbol':'1.2-2' }}</p>
+                   <p class="text-pink-600">
+                      <strong>Promoción:</strong> 
+                      @if (d.promotion) {
+                        {{ d.promotion.name }} ({{ d.promotion.discountPercentage }}% desc.)
+                      } @else {
+                        <span class="text-gray-500">Sin promoción</span>
+                      }
+                    </p>
+                </div>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+    } @else {
+      <div class="p-8 bg-white rounded-xl shadow-lg text-center text-gray-500">
+        <p>Este pedido no tiene detalles.</p>
+      </div>
+    }
+
+  </div>
+} @else {
+  <div class="p-8 text-center text-gray-500">
+    <p class="animate-pulse">Cargando pedido...</p>
+  </div>
+}

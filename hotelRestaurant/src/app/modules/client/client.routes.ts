@@ -44,10 +44,16 @@ export const CLIENT_ROUTES: Routes = [
              ),
             },
             {
-             path:'menu/:id',
-             loadComponent: () => import('./restaurant/menu-restaurante/menu-restaurante.component').then(
-                (m) => m.MenuRestauranteComponent
+             path:'pedidos',
+             loadComponent: () => import('./restaurant/pedido/pedido.component').then(
+                (m) => m.PedidoComponent
              )
+            },
+            {
+               path:'pedidos-detail/:id',
+               loadComponent: () => import('./restaurant/pedido-detail/pedido-detail.component').then(
+                  (m) => m.PedidoDetailComponent
+               )
             },
             {
                path: 'perfil-cliente',
@@ -60,7 +66,14 @@ export const CLIENT_ROUTES: Routes = [
                loadComponent: () => import('./hotel/ver-reservacion-cli/ver-reservacion-cli.component').then(
                   (m) => m.VerReservacionCliComponent,
                )
+            },
+            {
+               path: 'restaurant-details/:id',
+               loadComponent: () => import('./restaurant/restaurant-details/restaurant-details.component').then(
+                  (m) => m.RestaurantDetailsComponent,
+               )
             }
+         
         ]
     }
 ]

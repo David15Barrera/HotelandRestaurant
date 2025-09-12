@@ -30,6 +30,6 @@ export class ListHotelesComponent implements OnInit {
   }
 
   verDetalles(id: string) {
-    this.router.navigate(['client/hoteles-detail', id]); // ejemplo de ruta
+    this.router.navigate(['client/hoteles-detail', id]);
   }
 }

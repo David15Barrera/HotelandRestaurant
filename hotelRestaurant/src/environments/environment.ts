@@ -3,5 +3,13 @@ export const environments = {
 }
 
 export const environmetsHotel = {
-    API_URL: 'http://localhost:8082/api/hotel'
+    API_URL: 'https://microservice-hotel.onrender.com/api/hotel'
+}
+
+export const environmentRest = {
+    API_URL: 'https://microservice-restaurante-1.onrender.com/api/restaurant'
+}
+
+export const environmentProm = {
+    API_URL: 'https://microservice-promotions-12sn.onrender.com/api/promotion'
 }
