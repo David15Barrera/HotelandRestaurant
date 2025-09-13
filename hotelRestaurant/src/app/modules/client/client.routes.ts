@@ -38,6 +38,30 @@ export const CLIENT_ROUTES: Routes = [
              ),
             },
             {
+               path:'opinion-hotel',
+               loadComponent: () => import('./hotel/opinion-hotel/opinion-hotel.component').then(
+                  (m) => m.OpinionHotelComponent
+               )
+            },
+            {
+               path:'opinion-cuarto/:id',
+               loadComponent: () => import('./hotel/opinion-cuarto/opinion-cuarto.component').then(
+                  (m) => m.OpinionCuartoComponent
+               )
+            },
+            {
+               path:'ver-opinion-hotel/:id',
+               loadComponent: () => import('./hotel/veropinion-hotel/veropinion-hotel.component').then(
+                  (m) => m.VeropinionHotelComponent
+               )
+            },
+            {
+               path:'ver-Reviews/:id',
+               loadComponent: () => import('./restaurant/ver-opinion/ver-opinion.component').then(
+                  (m) => m.VerOpinionComponent
+               )
+            },
+            {
              path:'restaurantes',
              loadComponent: () => import('./restaurant/list-restaurantes/list-restaurantes.component').then(
                 (m) => m.ListRestaurantesComponent

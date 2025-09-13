@@ -66,6 +66,10 @@ export class RestaurantDetailsComponent implements OnInit {
     });
   }
 
+ irArReviews(restaurantId: string) {
+    this.router.navigate(['/client/ver-Reviews', restaurantId]);
+  }
+
   // Añadir al carrito
 addToCart(dish: Dish) {
   // Buscar promoción para este platillo

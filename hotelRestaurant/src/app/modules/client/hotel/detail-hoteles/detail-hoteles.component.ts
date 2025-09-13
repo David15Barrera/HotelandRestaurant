@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Promotion } from '../../models/promotiones.model';
 import { PromotionService } from '../../services/promotiones.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detail-hoteles',
@@ -34,7 +35,8 @@ export class DetailHotelesComponent implements OnInit {
     private hotelService: HotelService,
     private roomService: RoomService,
     private reservationService: ReservationService,
-    private promotionService: PromotionService
+    private promotionService: PromotionService,
+    private router: Router
   ) {}
 
  ngOnInit(): void {
@@ -157,7 +159,7 @@ reservar(room: Room): void {
       const totalPrice = (room.pricePerDay * days) * (1 - discount / 100);
 
       const reservation: Reservation = {
-        customerId: 'de851a7f-1232-4fb4-b549-0dcd7aa8bcd0',
+        customerId: '8bbb48e3-68b6-4b2f-9b09-35ee1706980c',
         roomId: room.id!,
         startDate: fechas.startDate,
         endDate: fechas.endDate,
@@ -195,4 +197,8 @@ reservar(room: Room): void {
 getPromotionForRoom(roomId: string): Promotion | undefined {
   return this.promotionsRooms.find((promo) => promo.roomId === roomId);
 }
+
+  verDetalles(id: string) {
+    this.router.navigate(['client/ver-opinion-hotel', id]);
+  }
 }

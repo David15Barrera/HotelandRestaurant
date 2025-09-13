@@ -13,3 +13,7 @@ export const environmentRest = {
 export const environmentProm = {
     API_URL: 'https://microservice-promotions-12sn.onrender.com/api/promotion'
 }
+
+export const environmentReviw = {
+        API_URL: 'https://microservice-reviews.onrender.com/api/reviews'
+}

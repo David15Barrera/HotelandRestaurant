@@ -72,7 +72,7 @@
             (click)="irOpiniones(restaurant.hotelIdResponse!)"
             class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
           >
-            Opiniones
+            Ver Hotel
           </button>
         }
         <button
@@ -80,6 +80,13 @@
           class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300 transform hover:scale-105"
         >
           Ver Menú
+        </button>
+
+                <button
+          (click)="irArReviews(restaurant.id)"
+          class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300 transform hover:scale-105"
+        >
+          Opiniones
         </button>
       </div>
     </div>
