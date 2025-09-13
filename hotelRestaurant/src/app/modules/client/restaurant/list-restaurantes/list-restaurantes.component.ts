@@ -14,20 +14,36 @@ export class ListRestaurantesComponent implements OnInit{
 
 restaurant: Restaurant[] = [];
 loading = true;
+customerId: string | null = null;
 
-  constructor(private restaurnatService: RestaurantService, private router: Router) {}
+constructor(private restaurnatService: RestaurantService, private router: Router) {}
 
   ngOnInit(): void {
-    this.restaurnatService.getAll().subscribe({
-      next: (data) => {
-        this.restaurant = data;
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error('Error al cargar restaurantes:', err);
-        this.loading = false;
+      const session = localStorage.getItem('session');
+      if (session) {
+        try {
+          const parsed = JSON.parse(session);
+          this.customerId = parsed.customerId;
+        } catch (e) {
+          console.error('Error al parsear la sesión del localStorage:', e);
+        }
       }
-    });
+          if (this.customerId) {
+          this.restaurnatService.getAll().subscribe({
+            next: (data) => {
+              this.restaurant = data;
+              this.loading = false;
+            },
+            error: (err) => {
+              console.error('Error al cargar restaurantes:', err);
+              this.loading = false;
+            }
+          });
+          }else{
+            alert('No se encontró customerId. No se pueden cargar los pedidos.');
+            this.router.navigate(['/session/login']);
+          }
+
   }
 
   verDetalles(id: string) {

@@ -11,7 +11,7 @@ import { setSession } from '../../../store/auth.actions';
 @Component({
   selector: 'app-auth-user',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, RouterLink],
+  imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './auth-user.component.html',
   styleUrl: './auth-user.component.scss'
 })
@@ -39,21 +39,24 @@ formBuilder: FormBuilder = inject(FormBuilder)
       this.store.dispatch(setSession({ session: resp }))
       localStorage.setItem("current_user", email)
 
-      if (resp) {
-        switch (resp.roleName) {
-          case "ADMIN":
-            this.router.navigate(['admin/inicio'])
-            break
-          case "CUSTOMER":
-            this.router.navigate(['client/inicio'])
-            break
-          case "EMPLOYEE":
-            this.router.navigate(['user/inicio'])
-            break
-        }
-      } else {
-        this.router.navigate(['/session/login'])
+if (resp) {
+  switch (resp.roleName) {
+    case "ADMIN":
+    case "EMPLOYEE":
+     alert('No puedes ingresar a esta plataforma. Acceso solo para clientes.');
+     this.router.navigate(['/session/login']); 
+      break;
+        case "CUSTOMER":
+          this.router.navigate(['client/inicio']);
+          break;
+        default:
+          alert('Rol de usuario no reconocido. Por favor, contacta a soporte.');
+          this.router.navigate(['/session/login']);
+          break;
       }
+    } else {
+      this.router.navigate(['/session/login']);
+    }
     })
   }
 }

@@ -23,7 +23,7 @@ ngOnInit(): void {
     const session = localStorage.getItem('session');
     if (session) {
       const parsed = JSON.parse(session);
-      console.log("datos :c", parsed); // 👈 usa coma, no +
+      console.log("datos :c", parsed);
       const id = parsed.customerId;
 
 if (id) {

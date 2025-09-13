@@ -30,6 +30,7 @@ export class DetailHotelesComponent implements OnInit {
 
   selectedDates: { [roomId: string]: { startDate: string; endDate: string } } = {};
 
+  customerId: string | null = null;
   constructor(
     private route: ActivatedRoute,
     private hotelService: HotelService,
@@ -40,6 +41,17 @@ export class DetailHotelesComponent implements OnInit {
   ) {}
 
  ngOnInit(): void {
+    const session = localStorage.getItem('session');
+    if (session) {
+      try {
+        const parsed = JSON.parse(session);
+        this.customerId = parsed.customerId;
+      } catch (e) {
+        console.error('Error parsing session data:', e);
+      }
+    }
+
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.hotelService.getHotelById(id).subscribe({
@@ -65,7 +77,6 @@ export class DetailHotelesComponent implements OnInit {
             (room) => room.hotelId?.toLowerCase() === this.hotel?.id.toLowerCase()
           );
 
-          // inicializamos las fechas para cada habitación
           this.rooms.forEach((room) => {
             this.selectedDates[room.id!] = {
               startDate: '',
@@ -84,12 +95,10 @@ loadPromotions(): void {
   if (this.hotel?.id) {
     this.promotionService.getByHotel(this.hotel.id).subscribe({
       next: (data) => {
-        // Generales del hotel
         this.promotionsHotel = data.filter(promo =>
           promo.hotelId && !promo.roomId && !promo.customerId && !promo.restaurantId
         );
 
-        // Promos ligadas a cuartos
         this.promotionsRooms = data.filter(promo =>
           promo.roomId !== null && promo.roomId !== undefined
         );
@@ -100,6 +109,14 @@ loadPromotions(): void {
 }
 
 reservar(room: Room): void {
+
+  if (!this.customerId) {
+    alert('Nesesitas estar logeado para entrar');
+    this.router.navigate(['/session/login']);
+    return;
+  }
+
+
   const fechas = this.selectedDates[room.id!];
 
   if (!fechas.startDate || !fechas.endDate) {
@@ -122,7 +139,6 @@ reservar(room: Room): void {
     return;
   }
 
-  // Verificamos disponibilidad
   this.roomService.getRoomAvailability(room.id!, fechas.startDate, fechas.endDate).subscribe({
     next: (available) => {
       if (!available) {
@@ -130,7 +146,6 @@ reservar(room: Room): void {
         return;
       }
 
-      // 🔎 1. Buscar promociones generales válidas del hotel
       let applicablePromotion: Promotion | undefined;
 
       applicablePromotion = this.promotionsHotel.find((promo) => {
@@ -139,7 +154,6 @@ reservar(room: Room): void {
         return start >= promoStart && end <= promoEnd;
       });
 
-      // 🔎 2. Si no hay promoción general, revisar promociones de la habitación
       if (!applicablePromotion) {
         applicablePromotion = this.promotionsRooms.find((promo) => {
           const promoStart = new Date(promo.startDate);
@@ -159,11 +173,11 @@ reservar(room: Room): void {
       const totalPrice = (room.pricePerDay * days) * (1 - discount / 100);
 
       const reservation: Reservation = {
-        customerId: '8bbb48e3-68b6-4b2f-9b09-35ee1706980c',
+        customerId: this.customerId!,
         roomId: room.id!,
         startDate: fechas.startDate,
         endDate: fechas.endDate,
-        state: 'ocupada',
+        state: 'RESERVADO',
         pricePerDay: room.pricePerDay,
         maintenanceCostPerDay: room.maintenanceCostPerDay,
         discountPercentage: discount,

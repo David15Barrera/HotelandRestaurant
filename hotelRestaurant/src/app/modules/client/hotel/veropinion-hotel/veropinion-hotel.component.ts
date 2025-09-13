@@ -44,7 +44,6 @@ export class VeropinionHotelComponent  implements OnInit {
         if (rooms.length > 0) {
           const roomsReviews$ = rooms.map(room =>
             this.reviewService.getByRoom(room.id!).pipe(
-              // Enriquecer cada reseña con el nombre de la habitación
               map(reviews => reviews.map(r => ({ ...r, roomName: room.roomNumber })))
             )
           );

@@ -11,7 +11,7 @@ import { ReviewService } from '../../services/review.service';
 import { Review } from '../../models/review.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { Router } from '@angular/router';
 
 export interface EnrichedReservation extends Reservation {
   roomName?: string;
@@ -28,18 +28,19 @@ export interface EnrichedReservation extends Reservation {
   styleUrl: './ver-reservacion-cli.component.scss'
 })
 export class VerReservacionCliComponent implements OnInit {
-  // Update the type here
+
   reservations: EnrichedReservation[] = [];
   loading = true;
 
   isModalOpen = false;
-  // Update the type here as well
+
   selectedReservation!: EnrichedReservation;
   rating = 0;
   comment = '';
   reviewType: 'hotel' | 'room' = 'room'; 
   
-  customerId = '8bbb48e3-68b6-4b2f-9b09-35ee1706980c';
+  customerId: string | null = null;
+
 
   constructor(
     private reservationService: ReservationService,
@@ -50,11 +51,24 @@ export class VerReservacionCliComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadReservations();
+   const session = localStorage.getItem('session');
+      if (session) {
+        try {
+          const parsed = JSON.parse(session);
+          this.customerId = parsed.customerId;
+        } catch (e) {
+          console.error('Error al parsear la sesión del localStorage:', e);
+        }
+      }
+          if (this.customerId) {
+            this.loadReservations();
+          }else{
+            alert('No se encontró customerId. No se pueden cargar los pedidos.');
+          }
   }
 
   private loadReservations(): void {
-    this.reservationService.getReservationsByCustomer(this.customerId).subscribe({
+   this.reservationService.getReservationsByCustomer(this.customerId!).subscribe({
       next: (data) => {
         const enrichedReservations$ = data.map(res =>
           this.roomService.getRoomById(res.roomId).pipe(
@@ -118,6 +132,12 @@ export class VerReservacionCliComponent implements OnInit {
   }
 
   submitReview(): void {
+
+
+    if (this.customerId === null) {
+        alert('Error: No se puede enviar la reseña sin un usuario.');
+        return;
+    }
     const reviewData: Partial<Review> = {
       customerId: this.customerId,
       rating: this.rating,

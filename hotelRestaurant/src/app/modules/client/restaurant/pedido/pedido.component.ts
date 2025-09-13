@@ -16,13 +16,28 @@ export class PedidoComponent implements OnInit {
   private router = inject(Router);
 
   orders: Order[] = [];
-  customerId = '8bbb48e3-68b6-4b2f-9b09-35ee1706980c'; // ⚡ debes obtenerlo del token o sesión
+  customerId: string | null = null;
 
   ngOnInit(): void {
-    this.orderService.getByCustomer(this.customerId).subscribe({
-      next: (data) => this.orders = data,
-      error: (err) => console.error('Error al cargar pedidos:', err)
-    });
+    const session = localStorage.getItem('session');
+    if (session) {
+      try {
+        const parsed = JSON.parse(session);
+        this.customerId = parsed.customerId;
+      } catch (e) {
+        console.error('Error al parsear la sesión del localStorage:', e);
+      }
+    }
+
+    if (this.customerId) {
+      this.orderService.getByCustomer(this.customerId).subscribe({
+        next: (data) => this.orders = data,
+        error: (err) => console.error('Error al cargar pedidos:', err)
+      });
+    } else {
+      console.error('No se encontró customerId. No se pueden cargar los pedidos.');
+      this.router.navigate(['/session/login']);
+    }
   }
 
   verDetalle(orderId: string) {

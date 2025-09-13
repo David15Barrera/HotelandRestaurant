@@ -27,8 +27,8 @@ export class PedidoDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private orderService = inject(OrderService);
   private orderDetailService = inject(OrderDetailService);
-  private dishService = inject(DishService); // Inyecta el servicio de platillos
-  private reviewService = inject(ReviewService); // Inyecta el servicio de reseñas
+  private dishService = inject(DishService);
+  private reviewService = inject(ReviewService);
 
   order?: Order;
   details: EnrichedOrderDetail[] = [];
@@ -40,9 +40,22 @@ export class PedidoDetailComponent implements OnInit {
   comment = '';
   reviewType: 'restaurant' | 'dishes' = 'dishes';
   selectedDishId: string | null = null;
-  customerId = '8bbb48e3-68b6-4b2f-9b09-35ee1706980c'; // TODO: obtener del login
+ 
+  customerId: string | null = null;
 
   ngOnInit(): void {
+
+    const session = localStorage.getItem('session');
+    if (session) {
+      try {
+        const parsed = JSON.parse(session);
+        this.customerId = parsed.customerId;
+      } catch (e) {
+        console.error('Error al parsear la sesión del localStorage:', e);
+      }
+    }
+
+
     const orderId = this.route.snapshot.paramMap.get('id');
     if (orderId) {
       this.orderService.getById(orderId).subscribe({
@@ -80,6 +93,12 @@ export class PedidoDetailComponent implements OnInit {
 
   // Métodos del modal
   openReviewModal(restaurantId: string): void {
+
+    if (!this.customerId) {
+        alert('Para dejar una opinión, necesitas iniciar sesión.');
+        return;
+    }
+
     this.isModalOpen = true;
     this.restaurantId = restaurantId;
     this.rating = 0;
@@ -93,6 +112,14 @@ export class PedidoDetailComponent implements OnInit {
   }
 
   submitReview(): void {
+    
+    if (!this.customerId) {
+      console.error('No se encontró el customerId en la sesión.');
+      alert('No se encontro el customerId en la Session')
+      return;
+    }
+
+
     const reviewData: Partial<Review> = {
       customerId: this.customerId,
       rating: this.rating,
@@ -114,10 +141,12 @@ export class PedidoDetailComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error al enviar la reseña:', err);
+          alert('Error al enviar la reseña');
         }
       });
     } else {
       console.error('ID de referencia de la reseña no encontrado.');
+      alert('Error el ID de referencia de la reseña no encontrado')
     }
   }
 }

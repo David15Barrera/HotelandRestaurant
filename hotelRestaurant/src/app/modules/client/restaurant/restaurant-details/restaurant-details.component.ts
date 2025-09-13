@@ -72,7 +72,7 @@ export class RestaurantDetailsComponent implements OnInit {
 
   // Añadir al carrito
 addToCart(dish: Dish) {
-  // Buscar promoción para este platillo
+
   const promo = this.promotions.find(p => p.dishId === dish.id);
 
   const item = this.cart.find(i => i.dish.id === dish.id);
@@ -103,15 +103,32 @@ addToCart(dish: Dish) {
 confirmarPedido() {
   if (!this.restaurant) return;
 
-  const customerId = '8bbb48e3-68b6-4b2f-9b09-35ee1706980c'; 
+  let customerId: string | null = null;
+  const session = localStorage.getItem('session');
+  if (session) {
+    try {
+      const parsed = JSON.parse(session);
+      customerId = parsed.customerId;
+    } catch (e) {
+      console.error('Error al parsear la sesión del localStorage:', e);
+      alert('Error al entontrar al Usuario');
+      return;
+    }
+  }
+
+
+  if (!customerId) {
+    console.error('No se encontró el customerId en la sesión.');
+    return;
+  }
 
   const orderData: Partial<Order> = {
     customerId: customerId,
     restaurantId: this.restaurant.id,
     totalPrice: this.getTotal(),
     discountPercentage: 0,   
-    promotionId: undefined,  // aquí podrías poner una promo global si aplica a toda la orden
-    status: 'PENDING'
+    promotionId: undefined,
+    status: 'PENDIENTE'
   };
 
   this.orderService.create(orderData).subscribe({
