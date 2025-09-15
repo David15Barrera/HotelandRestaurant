@@ -15,15 +15,18 @@ export interface SignUpModel {
 }
 
 
+export interface Confirmation {
+  email: string;
+  code: string;
+}
+
+
 //Cliente
 export interface CustomerSignUpModel {
-  fullName: string;
   cui: string;
-  phone?: string;
   email: string;
-  address: string;
   password: string;   
-  roleId: number;     
+
 }
 
 //Empleado
@@ -56,4 +59,25 @@ export interface SignInMFAModel {
 //Recuperar contraseña
 export interface RecoverPasswordModel {
   email: string;
+}
+
+export interface Register {
+  cui: string;
+  email: string;
+  password: string;
+}
+
+export interface Session {
+  token: string;
+  id: number;
+  email: string;
+  cui: string;
+  active: boolean;
+  employeeId: string;
+  customerId: string;
+  roleName: Rol;
+}
+
+export enum Rol {
+  CLIENTE = 'CLIENTE',
 }

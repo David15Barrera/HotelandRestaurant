@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiConfigService } from '../../../services/api-config.service';
-import { EmployeeSignUpModel, CustomerSignUpModel, SignInModel, SignUpModel } from '../models/auth';
+import { Confirmation, CustomerSignUpModel, Register, SignInModel, SignUpModel } from '../models/auth';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -18,15 +18,14 @@ export class AuthService {
     return this.http.post<any>(`${this.apiConfig.API_AUTH}/sign-in`, signInModel);
   }
 
-  signUpEmployeeAuth(employeeSignUpModel: EmployeeSignUpModel): Observable<any> {
-    return this.http.post<any>(`${this.apiConfig.API_AUTH}/employee/sign-up`, employeeSignUpModel);
+  // ----------- Registro -----------
+  signUp(registro: Register): Observable<any> {
+    return this.http.post<any>(`${this.apiConfig.API_AUTH}/sign-up`, registro);
   }
 
-  // ----------- EMPLOYEE -----------
-  signUp(signUpModel: SignUpModel): Observable<any> {
-    return this.http.post<any>(`${this.apiConfig.API_AUTH}/sign-up`, signUpModel);
-  }
-
+   confirmation(confirmation: Confirmation): Observable<any> {
+        return this.http.put<any>(`${this.apiConfig.API_AUTH}/sign-up`, confirmation);
+    }
 
 }
 

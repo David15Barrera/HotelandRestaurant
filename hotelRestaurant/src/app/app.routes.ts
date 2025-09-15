@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { AuthUserComponent } from './modules/auth/auth-user/auth-user.component';
 import { RegisterComponent } from './modules/auth/register/register.component';
 import { roleGuard } from './core/guards/auth.guard';
-
+import { ConfirmationComponent } from './modules/auth/confirmation/confirmation.component';
 export const routes: Routes = [
 
     {path: "session",
@@ -12,6 +12,9 @@ export const routes: Routes = [
         },
         {
             path: "register", component: RegisterComponent
+        },
+        {
+            path: "Confirmation", component: ConfirmationComponent 
         }
      ]
         },
